@@ -1,0 +1,206 @@
+# -*- sh -*-
+
+# ================
+# Option
+# ================
+
+# 環境変数
+export LANG=ja_JP.UTF-8
+
+# for standfirm
+export SFPUBLISHER_DEV_USER=iwama
+
+setopt auto_cd    # ディレクトリ名だけでcdする。
+setopt no_tify    # バックグラウンドジョブが終了したらすぐに知らせる。
+setopt no_beep    # 補完候補がないときなどにビープ音を鳴らさない。
+setopt ignore_eof # ^Dでログアウトしないようにする。
+setopt mark_dirs  # ファイル名の展開でディレクトリにマッチした場合末尾に / を付加する
+setopt auto_list  # 曖昧な補完で、自動的に選択肢をリストアップ
+setopt correct    # コマンドのスペルの訂正を使用する
+setopt auto_remove_slash # 補完が/で終って、つぎが、語分割子か/かコマンドの後(;とか&)だったら、補完末尾の/を取る
+setopt correct
+setopt pushd_ignore_dups
+
+# 単語の区切り文字を指定する
+autoload -Uz select-word-style
+select-word-style default
+zstyle ':zle:*' word-chars " /=;@:{},|_-"
+zstyle ':zle:*' word-style unspecified
+
+# TIMEZONE
+export TZ='Asia/Tokyo'
+
+REPORTTIME=1                  # 自動的に消費時間の統計情報を表示する。
+
+# =================
+# プロンプト
+# =================
+autoload -U promptinit; promptinit
+autoload -Uz colors; colors
+autoload -Uz vcs_info
+autoload -Uz is-at-least
+
+setopt transient_rprompt # コピペしやすいようにコマンド実行後は右プロンプトを消す。
+
+zstyle ':vcs_info:*' formats \
+    '(%{%F{white}%K{magenta}%}%s%{%f%k%})-[%{%F{white}%K{blue}%}%b%{%f%k%}]'
+zstyle ':vcs_info:*' actionformats \
+    '(%{%F{white}%K{magenta}%}%s%{%f%k%})-[%{%F{white}%K{blue}%}%b%{%f%k%}|%{%F{white}%K{red}%}%a%{%f%k%}]'
+
+prompt_bar_left_self="%{%F{blue}%}(%{%B%}%n%{%b%f%}%{%F{yellow}%}@%{%F{bule}%}%{%B%}%m%{%b%})%{%f%}"
+prompt_bar_left_status="(%{%B%F{blue}%(?.%K{green}.%K{red})%}%?%{%k%f%b%})"
+prompt_bar_left="~${prompt_bar_left_self}"
+
+my_prompt_left="%F{magenta}%{%B%}%n%{%b%f%}%{%F{blue}%}@%{%F{magenta}%}%{%B%}%m%{%b%}~%(1j,(%j),)%{%B%F{yellow}%}%#%{%b%}%{%f%} "
+
+
+## プロンプトフォーマットを展開した後の文字数を返す。
+count_prompt_characters()
+{
+    print -n -P -- "$1" | sed -e $'s/\e\[[0-9;]*m//g' | wc -m | sed -e 's/ //g'
+}
+
+## プロンプトを更新する。
+update_prompt()
+{
+    local bar_left_length=$(count_prompt_characters "$prompt_bar_left")
+    local bar_rest_length=$[COLUMNS - bar_left_length]
+    local bar_left="$prompt_bar_left"
+    local bar_right_without_path="${prompt_bar_right:s/%d//}"
+    local bar_right_without_path_length=$(count_prompt_characters "$bar_right_without_path")
+    local max_path_length=$[bar_rest_length - bar_right_without_path_length]
+    bar_right=${prompt_bar_right:s/%d/%(C,%${max_path_length}<...<%d%<<,)/}
+    bar_right="%${bar_rest_length}<<${separator}${bar_right}%<<"
+    PROMPT="${my_prompt_left}"
+    RPROMPT="[%{%B%F{yellow}%}%~%{%k%f%b%}]"
+    case "$TERM_PROGRAM" in
+	Apple_Terminal)
+	    RPROMPT="${RPROMPT}-"
+	    ;;
+    esac
+
+    LANG=C vcs_info >&/dev/null
+    if [ -n "$vcs_info_msg_0_" ]; then
+	RPROMPT="${vcs_info_msg_0_}-${RPROMPT}"
+    fi
+}
+
+precmd_functions=($precmd_functions update_prompt)
+
+# 色
+export LSCOLORS=exfxcxdxbxegedabagacad
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+
+# =================
+# 補完
+# =================
+
+setopt complete_in_word      # 語の途中でもカーソル位置で補完
+setopt magic_equal_subst     # コマンドラインの引数で --prefix=/usr などの = 以降でも補完できる
+setopt always_last_prompt    # カーソル位置は保持したままファイル名一覧を順次その場で表示
+setopt auto_menu             # タブキーの連打で自動的にメニュー補完
+setopt complete_in_word      # カーソル位置で補完する。
+
+zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' format '%B%d%b'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:default' menu select=2
+zstyle ':completion:*:default' list-colors ""
+# 大文字でも小文字でも補完する
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+## 補完候補をキャッシュする。
+zstyle ':completion:*' use-cache yes
+## 詳細な情報を使う。
+zstyle ':completion:*' verbose yes
+## sudo時にはsudo用のパスも使う。
+zstyle ':completion:sudo:*' environ PATH="$SUDO_PATH:$PATH"
+# セパレータを設定する
+zstyle ':completion:*' list-separator '-->'
+zstyle ':completion:*:manuals' separate-sections true
+
+# zsh-completions
+fpath=(/usr/local/share/zsh-completions $fpath)
+
+autoload -U compinit; compinit
+
+# ================
+# History
+# ================
+
+HISTFILE=${HOME}/.zsh_history
+HISTSIZE=10000000
+SAVEHIST=10000000
+HISTTIMEFORMAT="[%Y/%M/%D %H:%M:%S] "
+setopt extended_history
+setopt hist_ignore_dups   # 同じコマンドラインを連続で実行した場合はヒストリに登録しない。
+setopt hist_ignore_space  # スペースで始まるコマンドラインはヒストリに追加しない。
+setopt inc_append_history # すぐにヒストリファイルに追記する。
+setopt share_history      # zshプロセス間でヒストリを共有する。
+setopt no_flow_control    # C-s, C-qを無効にする
+setopt hist_reduce_blanks # 履歴から無駄な空白を除く
+
+#入力途中の履歴補完を有効化する
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+#入力途中の履歴補完
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+bindkey '^R' history-incremental-pattern-search-backward
+
+# ================
+# alias
+# ================
+
+alias ls="ls -FG"
+alias la="ls -FGThgoa"
+alias l="ls -lFh"
+alias rm="rm -i"
+alias mv="mv -i"
+alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
+
+alias be="bundle exec"
+alias bs="bundle exec spring"
+alias binit="bundle init; bundle install --path vendor/bundle"
+alias ff='find . -name "*" | peco | xargs open'
+alias fe='find . -name "*" | peco | xargs open -a emacs'
+
+# ===============
+# keybind
+# ===============
+
+# Emacs風キーバインド
+bindkey -e
+
+function cdup() {
+   echo
+   cd ..
+   zle reset-prompt
+}
+zle -N cdup
+bindkey '^^' cdup
+bindkey '^[h' backward-kill-word
+bindkey '^h' backward-delete-char
+# function chpwd() { ls -l }
+
+# ======================
+# source
+# ======================
+
+source `brew --prefix rbenv`/completions/rbenv.zsh
+source `brew --prefix`/etc/profile.d/z.sh
+source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# =====================================
+# zaw
+# =====================================
+autoload -U cdr
+source ~/.zaw/zaw.zsh
+zstyle ':chpwd:*' recent-dirs-max 100
+zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
+
+bindkey '^s' zaw-cdr
+bindkey '^[g' zaw-git-branches
+bindkey '^[r' zaw-history
