@@ -24,7 +24,7 @@ setopt pushd_ignore_dups
 # 単語の区切り文字を指定する
 autoload -Uz select-word-style
 select-word-style default
-zstyle ':zle:*' word-chars " /=;@:{},|_-"
+zstyle ':zle:*' word-chars " /=;@:{},.|_-"
 zstyle ':zle:*' word-style unspecified
 
 # TIMEZONE
