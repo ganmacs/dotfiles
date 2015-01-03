@@ -1,0 +1,54 @@
+{
+    "layouts": [
+        "fullscreen",
+        "tall",
+        "widescreen-tall",
+    ],
+    "mod1": [
+        "option",
+        "control",
+        "shift",
+    ],
+    "mod2": [
+        "option",
+        "control",
+        "shift",
+        "command",
+    ],
+
+    "screens": "4",
+
+    "cycle-layout": {
+        "mod": "mod1",
+        "key": "down"
+    },
+    "expand-main": {
+        "mod": "mod1",
+        "key": "right"
+    },
+    "shrink-main": {
+        "mod": "mod1",
+        "key": "left"
+    },
+
+    "throw-screen-1": {
+        "mod": "mod2",
+        "key": "1"
+    },
+    "throw-screen-2": {
+        "mod": "mod2",
+        "key": "2"
+    },
+
+    "swap-cw": {
+        "mod": "mod2",
+        "key": "s"
+    },
+
+    "floating": [
+        "com.apple.systempreferences",
+        "com.cockos.LICEcap"
+    ],
+
+    "enables-layout-hud-on-space-change": false
+}
