@@ -47,7 +47,8 @@
 
     "floating": [
         "com.apple.systempreferences",
-        "com.cockos.LICEcap"
+        "com.cockos.LICEcap",
+        "com.apple.finder"
     ],
 
     "enables-layout-hud-on-space-change": false
