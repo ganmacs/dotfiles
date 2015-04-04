@@ -1,7 +1,7 @@
 # -*- sh -*-
 
 # ================
-# Option
+# General Settings
 # ================
 
 # 環境変数
@@ -24,11 +24,8 @@ setopt pushd_ignore_dups
 # 単語の区切り文字を指定する
 autoload -Uz select-word-style
 select-word-style default
-zstyle ':zle:*' word-chars " /=;@:{},.|_-"
+zstyle ':zle:*' word-chars " /=;@:{}.,|-_"
 zstyle ':zle:*' word-style unspecified
-
-# TIMEZONE
-export TZ='Asia/Tokyo'
 
 REPORTTIME=1                  # 自動的に消費時間の統計情報を表示する。
 
@@ -159,13 +156,49 @@ alias la="ls -FGThgoa"
 alias l="ls -lFh"
 alias rm="rm -i"
 alias mv="mv -i"
-alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
-
 alias be="bundle exec"
 alias bs="bundle exec spring"
 alias binit="bundle init; bundle install --path vendor/bundle"
+alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
 alias ff='find . -name "*" | peco | xargs open'
 alias fe='find . -name "*" | peco | xargs open -a emacs'
+
+# ======================
+# source
+# ======================
+
+source `brew --prefix rbenv`/completions/rbenv.zsh
+source `brew --prefix`/etc/profile.d/z.sh
+source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# zaw
+autoload -U cdr
+source /Users/ganmacs/.zsh/zaw/zaw.zsh
+zstyle ':chpwd:*' recent-dirs-max 100
+zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
+
+bindkey '^s' zaw-cdr
+bindkey '^z' zaw-gitdir
+bindkey '^[g' zaw-git-branches
+bindkey '^(' zaw-history
+bindkey -M filterselect '^o' accept-search
+
+function zaw-src-gitdir () {
+  _dir=$(git rev-parse --show-cdup 2>/dev/null)
+  if [ $? -eq 0 ]
+  then
+    candidates=( $(git ls-files ${_dir} | perl -MFile::Basename -nle \
+                                               '$a{dirname $_}++; END{delete $a{"."}; print for sort keys %a}') )
+  fi
+  actions=("zaw-src-gitdir-cd")
+  act_descriptions=("change directory in git repos")
+}
+
+function zaw-src-gitdir-cd () {
+  BUFFER="cd $1"
+  zle accept-line
+}
+zaw-register-src -n gitdir zaw-src-gitdir
 
 # ===============
 # keybind
@@ -183,24 +216,13 @@ zle -N cdup
 bindkey '^^' cdup
 bindkey '^[h' backward-kill-word
 bindkey '^h' backward-delete-char
+
 # function chpwd() { ls -l }
 
-# ======================
-# source
-# ======================
+export PATH=$HOME/.cabal/bin:$PATH
 
-source `brew --prefix rbenv`/completions/rbenv.zsh
-source `brew --prefix`/etc/profile.d/z.sh
-source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# OPAM configuration
+. /Users/ganmacs/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-# =====================================
-# zaw
-# =====================================
-autoload -U cdr
-source ~/.zaw/zaw.zsh
-zstyle ':chpwd:*' recent-dirs-max 100
-zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
-
-bindkey '^s' zaw-cdr
-bindkey '^[g' zaw-git-branches
-bindkey '^[r' zaw-history
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
