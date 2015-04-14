@@ -173,7 +173,7 @@ source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # zaw
 autoload -U cdr
-source /Users/ganmacs/.zsh/zaw/zaw.zsh
+source $HOME/.zsh/zaw/zaw.zsh
 zstyle ':chpwd:*' recent-dirs-max 100
 zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
 
@@ -222,7 +222,7 @@ bindkey '^h' backward-delete-char
 export PATH=$HOME/.cabal/bin:$PATH
 
 # OPAM configuration
-. /Users/ganmacs/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"

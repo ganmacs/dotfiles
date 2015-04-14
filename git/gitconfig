@@ -2,7 +2,7 @@
 	name = ganmacs
 	email = ganmacs@gmail.com
 [core]
-	excludesfile = /Users/ganmacs/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
 	editor = vim
 	pager = less
 [color]
