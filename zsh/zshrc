@@ -173,7 +173,7 @@ source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # zaw
 autoload -U cdr
-source $HOME/.zsh/zaw/zaw.zsh
+source $HOME/.zaw/zaw.zsh
 zstyle ':chpwd:*' recent-dirs-max 100
 zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
 
