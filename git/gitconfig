@@ -10,6 +10,8 @@
 	diff = auto
 [push]
 	default = tracking
+[ghq]
+  root = ~/src
 [alias]
 	co = checkout
 	po = push origin
