@@ -228,7 +228,8 @@ export PATH=$HOME/.cabal/bin:$PATH
 export PATH="/usr/local/heroku/bin:$PATH"
 
 # for GO
-export GOPATH=$HOME/
+export GOPATH=$HOME
+export PATH=$PATH:$GOPATH/bin
 
 function peco-src () {
     local selected_dir=$(ghq list --full-path | peco --query "$LBUFFER")
