@@ -1,27 +1,27 @@
 [user]
-	name = ganmacs
-	email = ganmacs@gmail.com
+  name = ganmacs
+  email = ganmacs@gmail.com
 [core]
-	excludesfile = ~/.gitignore_global
-	editor = vim
-	pager = less
+  excludesfile = ~/.gitignore_global
+  editor = vim
+  pager = less
 [color]
-	ui = auto
-	diff = auto
+ ui = auto
+ diff = auto
 [push]
-	default = tracking
+  default = tracking
 [ghq]
-  root = ~/src
+ root = ~/src
 [alias]
-	co = checkout
-	po = push origin
-	cm = commit
+  co = checkout
+  po = push origin
+  cm = commit
   st = status
   br = branch
-	re = rebase
-	u  = remote update
+  re = rebase
+  u	 = remote update
   ft = fetch
-	ri = rebase -i
+  ri = rebase -i
   uncommit = reset --mixed HEAD~1
   recommit = commit -c ORIG_HEAD
   hist = log --graph --stat
