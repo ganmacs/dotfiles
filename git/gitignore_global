@@ -6,3 +6,8 @@
 .DS_Store
 ,/*
 ,*
+.bundle/
+vendor/bundle/*
+GPATH
+GRTAGS
+GTAGS
