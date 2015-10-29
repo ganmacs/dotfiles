@@ -4,11 +4,12 @@
 # General Settings
 # ================
 
-# 環境変数
-export LANG=ja_JP.UTF-8
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
-# for standfirm
-export SFPUBLISHER_DEV_USER=iwama
+export EDITOR=/usr/local/bin/vim
+
+REPORTTIME=1                  # 自動的に消費時間の統計情報を表示する。
 
 setopt auto_cd    # ディレクトリ名だけでcdする。
 setopt no_tify    # バックグラウンドジョブが終了したらすぐに知らせる。
@@ -20,73 +21,54 @@ setopt correct    # コマンドのスペルの訂正を使用する
 setopt auto_remove_slash # 補完が/で終って、つぎが、語分割子か/かコマンドの後(;とか&)だったら、補完末尾の/を取る
 setopt correct
 setopt pushd_ignore_dups
+setopt auto_pushd
 
-# 単語の区切り文字を指定する
+# select word style
 autoload -Uz select-word-style
 select-word-style default
 zstyle ':zle:*' word-chars " /=;@:{}.,|-_"
 zstyle ':zle:*' word-style unspecified
 
-REPORTTIME=1                  # 自動的に消費時間の統計情報を表示する。
-
-# =================
-# プロンプト
-# =================
-autoload -U promptinit; promptinit
-autoload -Uz colors; colors
+# prompt
 autoload -Uz vcs_info
+autoload -Uz colors; colors
 autoload -Uz is-at-least
 
-setopt transient_rprompt # コピペしやすいようにコマンド実行後は右プロンプトを消す。
+setopt prompt_subst
 
-zstyle ':vcs_info:*' formats \
-    '(%{%F{white}%K{magenta}%}%s%{%f%k%})-[%{%F{white}%K{blue}%}%b%{%f%k%}]'
-zstyle ':vcs_info:*' actionformats \
-    '(%{%F{white}%K{magenta}%}%s%{%f%k%})-[%{%F{white}%K{blue}%}%b%{%f%k%}|%{%F{white}%K{red}%}%a%{%f%k%}]'
+zstyle ':vcs_info:*' enable git svn hg bzr
+zstyle ':vcs_info:*' max-exports 3
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr "+"
+zstyle ':vcs_info:*' unstagedstr "*"
+zstyle ':vcs_info:git:*' formats '[%b] %c%u'
+zstyle ':vcs_info:git:*' actionformats '[%b|%a] %c%u'
 
-prompt_bar_left_self="%{%F{blue}%}(%{%B%}%n%{%b%f%}%{%F{yellow}%}@%{%F{bule}%}%{%B%}%m%{%b%})%{%f%}"
-prompt_bar_left_status="(%{%B%F{blue}%(?.%K{green}.%K{red})%}%?%{%k%f%b%})"
-prompt_bar_left="~${prompt_bar_left_self}"
-
-my_prompt_left="%F{magenta}%{%B%}%n%{%b%f%}%{%F{blue}%}@%{%F{magenta}%}%{%B%}%m%{%b%}~%(1j,(%j),)%{%B%F{yellow}%}%#%{%b%}%{%f%} "
-
-
-## プロンプトフォーマットを展開した後の文字数を返す。
-count_prompt_characters()
-{
-    print -n -P -- "$1" | sed -e $'s/\e\[[0-9;]*m//g' | wc -m | sed -e 's/ //g'
+precmd () {
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 
-## プロンプトを更新する。
-update_prompt()
-{
-    local bar_left_length=$(count_prompt_characters "$prompt_bar_left")
-    local bar_rest_length=$[COLUMNS - bar_left_length]
-    local bar_left="$prompt_bar_left"
-    local bar_right_without_path="${prompt_bar_right:s/%d//}"
-    local bar_right_without_path_length=$(count_prompt_characters "$bar_right_without_path")
-    local max_path_length=$[bar_rest_length - bar_right_without_path_length]
-    bar_right=${prompt_bar_right:s/%d/%(C,%${max_path_length}<...<%d%<<,)/}
-    bar_right="%${bar_rest_length}<<${separator}${bar_right}%<<"
-    PROMPT="${my_prompt_left}"
-    RPROMPT="[%{%B%F{yellow}%}%~%{%k%f%b%}]"
-    case "$TERM_PROGRAM" in
-	Apple_Terminal)
-	    RPROMPT="${RPROMPT}-"
-	    ;;
-    esac
+PROMPT="%{${fg[green]}%}%n%{${reset_color}%}@%F{blue}localhost%f:%1(v|%F{red}%1v%f|) $ "
 
-    LANG=C vcs_info >&/dev/null
-    if [ -n "$vcs_info_msg_0_" ]; then
-	RPROMPT="${vcs_info_msg_0_}-${RPROMPT}"
-    fi
-}
+OK="✔ "
+NG="✘ "
+PROMPT_EXIT_STATUS="%(?.%F{green}$OK%f.%F{red}$NG%f) "
+PROMPT_PATH="%F{blue}%~%f"
 
-precmd_functions=($precmd_functions update_prompt)
+PROMPT="
+$PROMPT_EXIT_STATUS $PROMPT_PATH %1(v|%F{magenta}%1v%f|)
+%% "
 
-# 色
-export LSCOLORS=exfxcxdxbxegedabagacad
-export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+RPROMPT=" %F{yellow}[%*]"
+
+# cdr
+
+autoload -U cdr
+source $HOME/.zaw/zaw.zsh
+zstyle ':chpwd:*' recent-dirs-max 100
+zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
 
 # =================
 # 補完
@@ -162,43 +144,38 @@ alias binit="bundle init; bundle install --path vendor/bundle"
 alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
 alias ff='find . -name "*" | peco | xargs open'
 alias fe='find . -name "*" | peco | xargs open -a emacs'
+alias awk='gawk'
+alias sed='gsed'
+alias grep='ggrep'
+alias tar='gtar'
+alias vi='vim'
+alias gibol='gibo -l | tr "\t" "\n" | sed "/^=/d" | sort | peco | xargs gibo'
+alias git='hub'
+alias g='hub'
+alias p='pbpaste'
+alias c='pbcopy'
+alias e='open-alc'
 
 # ======================
 # source
 # ======================
 
 source `brew --prefix rbenv`/completions/rbenv.zsh
-source `brew --prefix`/etc/profile.d/z.sh
 source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# zaw
-autoload -U cdr
-source $HOME/.zaw/zaw.zsh
-zstyle ':chpwd:*' recent-dirs-max 100
-zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
+export PATH=$HOME/.cabal/bin:$PATH
 
-bindkey '^s' zaw-cdr
-bindkey '^z' zaw-gitdir
-bindkey '^[g' zaw-git-branches
-bindkey '^(' zaw-history
-bindkey -M filterselect '^o' accept-search
+# OPAM configuration
+. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-function zaw-src-gitdir () {
-  _dir=$(git rev-parse --show-cdup 2>/dev/null)
-  if [ $? -eq 0 ]
-  then
-    candidates=( $(git ls-files ${_dir} | perl -MFile::Basename -nle \
-                                               '$a{dirname $_}++; END{delete $a{"."}; print for sort keys %a}') )
-  fi
-  actions=("zaw-src-gitdir-cd")
-  act_descriptions=("change directory in git repos")
-}
+# Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
 
-function zaw-src-gitdir-cd () {
-  BUFFER="cd $1"
-  zle accept-line
-}
-zaw-register-src -n gitdir zaw-src-gitdir
+# peco and golang
+export GOPATH=$HOME
+export PATH=$PATH:$GOPATH/bin
+
+eval "$(direnv hook zsh)"
 
 # ===============
 # keybind
@@ -206,38 +183,72 @@ zaw-register-src -n gitdir zaw-src-gitdir
 
 # Emacs風キーバインド
 bindkey -e
-
-function cdup() {
-   echo
-   cd ..
-   zle reset-prompt
-}
-zle -N cdup
-bindkey '^^' cdup
 bindkey '^[h' backward-kill-word
 bindkey '^h' backward-delete-char
 
-# function chpwd() { ls -l }
+function cdup() {
+    echo
+    cd ..
+    zle reset-prompt
+}
+zle -N cdup
+bindkey '^^' cdup
 
-export PATH=$HOME/.cabal/bin:$PATH
+function open-alc() {
+    url="http://eow.alc.co.jp/search?q="
+    open "${url}$1"
+}
 
-# OPAM configuration
-. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+function copy-line-as-kill() {
+    zle kill-line
+    print -rn $CUTBUFFER | pbcopy
+}
+zle -N copy-line-as-kill
+bindkey '^k' copy-line-as-kill
 
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
 
-# for GO
-export GOPATH=$HOME
-export PATH=$PATH:$GOPATH/bin
-
-function peco-src () {
-    local selected_dir=$(ghq list --full-path | peco --query "$LBUFFER")
+# peco
+function peco-ghq() {
+    local selected_dir=$(ghq list | peco --query "$LBUFFER")
     if [ -n "$selected_dir" ]; then
-        BUFFER="cd ${selected_dir}"
+        BUFFER="cd ${GOPATH}/src/${selected_dir}"
         zle accept-line
     fi
-    zle clear-screen
+    zle redisplay
 }
-zle -N peco-src
-bindkey '^q' peco-src
+zle -N peco-ghq
+bindkey '^q' peco-ghq
+# bindkey '^X@;' peco-src
+
+function peco-branches() {
+    local selected_branch=$(git branch | peco --query "$LBUFFER" | sed -e "s/^\*[ ]*//g")
+    if [ -n "$selected_branch" ]; then
+        BUFFER="git checkout${selected_branch}"
+        zle accept-line
+    fi
+    zle redisplay
+}
+zle -N peco-branches
+bindkey '^[g' peco-branches
+
+function peco-find-file() {
+    if git rev-parse 2> /dev/null; then
+        source_files=$(git ls-files)
+    else
+        source_files=$(find . -type f)
+    fi
+    selected_files=$(echo $source_files | peco --prompt "[find file]")
+
+    result=''
+    for file in $selected_files; do
+        result="${result}$(echo $file | tr '\n' ' ')"
+    done
+
+    BUFFER="${BUFFER}${result}"
+    CURSOR=$#BUFFER
+    zle redisplay
+}
+zle -N peco-find-file
+bindkey '^s' peco-find-file
+
+alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
