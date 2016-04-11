@@ -257,3 +257,13 @@ zle -N peco-find-file
 bindkey '^s' peco-find-file
 
 alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
+
+function peco-find-history() {
+    BUFFER=$(fc -l -n -r 1 | peco )
+    CURSOR=$#BUFFER
+    zle redisplay
+}
+zle -N peco-find-history
+bindkey '^r' peco-find-history
+
+eval "$(docker-machine env default)"
