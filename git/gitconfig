@@ -6,12 +6,12 @@
   editor = vim
   pager = less
 [color]
- ui = auto
- diff = auto
+  ui = auto
+  diff = auto
 [push]
   default = tracking
 [ghq]
- root = ~/src
+  root = ~/src
 [alias]
   co = checkout
   p  = push
@@ -33,7 +33,7 @@
   ignore = !"f() { local s=$1; shift; while [ $# -gt 0 ]; do s="$s,$1"; shift; done; curl "http://gitignore.io/api/$s"; }; f"
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /opt/homebrew-cask/Caskroom/sourcetree/2.0.5.2/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
@@ -44,3 +44,6 @@
 [github]
   user = ganmacs
   password = ganmacs
+[cmsg]
+  ignorePaths=ganmacs
+  ignoreCommits=ganmacs

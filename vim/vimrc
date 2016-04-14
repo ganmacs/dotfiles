@@ -1,110 +1,8 @@
-if 0 | endif
-
-if has('vim_starting')
-  if &compatible
-    set nocompatible
-  endif
-
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" ==================
-" plugins
-" ==================
-
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'tomasr/molokai'
-NeoBundle 'Shougo/neocomplete'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'shougo/unite-outline'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'alpaca-tc/vim-endwise'
-
-call neobundle#end()
-filetype plugin indent on
-NeoBundleCheck
-" ------------------------------------
-" neobundle
-" ------------------------------------
-let g:unite_enable_start_insert=1
-let g:unite_source_history_yank_enable =1
-let g:unite_split_rule = 'botright'
-" The prefix key.
-nnoremap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
-nnoremap <silent> ,uf :<C-u>Unite file<CR>
-nnoremap <silent> ,ui :<C-u>Unite -vertical outline<CR>
-" ------------------------------------
-" neocomplete
-" ------------------------------------
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-
-" ------------------------------------
 " colorscheme
 " ------------------------------------
+
 syntax on
-set background=dark
-colorscheme molokai
-highlight Normal ctermbg=none
-
-" ------------------------------------
-" syntastic
-" ------------------------------------
-let g:syntastic_mode_map = { 'mode': 'passive',
-            \ 'active_filetypes': ['ruby'] }
-let g:syntastic_ruby_checkers = ['rubocop']
-
-" ------------------------------------
-" lightline
-" ------------------------------------
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'fugitive': 'MyFugitive',
-      \   'readonly': 'MyReadonly',
-      \   'modified': 'MyModified'
-      \ }
-      \ }
-
-function! MyModified()
-  if &filetype == "help"
-    return ""
-  elseif &modified
-    return "+"
-  elseif &modifiable
-    return ""
-  else
-    return ""
-  endif
-endfunction
-
-function! MyReadonly()
-  if &filetype == "help"
-    return ""
-  elseif &readonly
-    return "⭤"
-  else
-    return ""
-  endif
-endfunction
-
-function! MyFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
+colorscheme desert
 
 "" Global
 set notitle
@@ -152,6 +50,8 @@ set listchars=tab:>.,trail:_,extends:>,precedes:<
 set showmatch
 set matchtime=3
 set laststatus=2
+set cursorline
+highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
 
 "" Keybind
 nmap <ESC><ESC> ;nohlsearch<CR><ESC>
@@ -162,4 +62,3 @@ inoremap <C-b> <Left>
 inoremap <C-f> <Right>
 inoremap <C-h> <Backspace>
 inoremap <C-d> <Del>
-
