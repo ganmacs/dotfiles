@@ -59,7 +59,7 @@ PROMPT_EXIT_STATUS="%(?.%F{green}$OK%f.%F{red}$NG%f) "
 PROMPT_PATH="%F{blue}%~%f"
 
 PROMPT="$PROMPT_EXIT_STATUS $PROMPT_PATH %1(v|%F{magenta}%1v%f|)
-%% "
+$ "
 
 RPROMPT=" %F{yellow}[%*]"
 
@@ -230,6 +230,13 @@ function copy-line-as-kill() {
 }
 zle -N copy-line-as-kill
 bindkey '^k' copy-line-as-kill
+
+function clipboard-yank () {
+  CUTBUFFER=$(pbpaste)
+  zle yank
+}
+zle -N clipboard-yank
+bindkey '^y' clipboard-yank
 
 
 # peco
