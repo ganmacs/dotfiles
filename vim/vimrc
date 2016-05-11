@@ -45,8 +45,6 @@ set number
 set title
 set showcmd
 set ruler
-set list
-set listchars=tab:>.,trail:_,extends:>,precedes:<
 set showmatch
 set matchtime=3
 set laststatus=2
