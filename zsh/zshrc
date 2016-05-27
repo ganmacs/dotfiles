@@ -157,6 +157,8 @@ alias c='pbcopy'
 alias e='open-alc'
 alias dl='docker ps -l -q'
 alias cmsgi='cmsg --no-merges | peco'
+alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
+alias -g prc='`ps aux | grep $1 | grep -v grep`'
 
 # ======================
 # source
@@ -232,12 +234,11 @@ zle -N copy-line-as-kill
 bindkey '^k' copy-line-as-kill
 
 function clipboard-yank () {
-  CUTBUFFER=$(pbpaste)
-  zle yank
+    CUTBUFFER=$(pbpaste)
+    zle yank
 }
 zle -N clipboard-yank
 bindkey '^y' clipboard-yank
-
 
 # peco
 function peco-ghq() {
@@ -250,12 +251,12 @@ function peco-ghq() {
 }
 zle -N peco-ghq
 bindkey '^q' peco-ghq
-# bindkey '^X@;' peco-src
 
 function peco-branches() {
-    local selected_branch=$(git branch | peco --query "$LBUFFER" | sed -e "s/^\*[ ]*//g")
+    local selected_branch="$(git branch | peco --query "$LBUFFER" | sed -e "s/^\*[ ]*//g")"
+    echo $selected_branch
     if [ -n "$selected_branch" ]; then
-        BUFFER="git checkout${selected_branch}"
+        BUFFER="git checkout ${selected_branch}"
         zle accept-line
     fi
     zle redisplay
@@ -283,8 +284,6 @@ function peco-find-file() {
 zle -N peco-find-file
 bindkey '^s' peco-find-file
 
-alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
-
 function peco-find-history() {
     BUFFER=$(fc -l -n -r 1 | peco )
     CURSOR=$#BUFFER
@@ -292,3 +291,16 @@ function peco-find-history() {
 }
 zle -N peco-find-history
 bindkey '^r' peco-find-history
+function run_tmux() {
+    if [ -z "$TMUX" ]; then
+        if tmux has-session >/dev/null 2>&1 ; then
+            RET=$(tmux list-session | peco | sed -e "s/:.*//g")
+            RET=$(echo ${RET} | sed -e "s/[\r\n]\+//g")
+            if [ ! -z "$RET" ]; then
+                tmux attach -t "$RET"
+            fi
+        fi
+    fi
+}
+
+run_tmux
