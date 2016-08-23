@@ -6,8 +6,10 @@
 .DS_Store
 ,/*
 ,*
-.bundle/
+.bundle/*
 vendor/bundle/*
 GPATH
 GRTAGS
 GTAGS
+.overcommit.yml
+.git-hooks/*

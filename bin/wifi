@@ -1,0 +1,102 @@
+#!/bin/bash
+
+USAGE="\
+Usage:  wifi <action>
+
+ACTIONS:
+ on                   turn on a wifi network
+ off                  turn off a wifi network
+ list                 show all avaible wifi networks
+ join                 join the specific network
+ info                 show a wifi status\
+"
+
+interface="en0"
+
+airport_path="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
+
+if [[ ! -x $airport_path ]]; then
+    echo "$airport_path: not found" 1>&2
+    exit 1
+fi
+
+turn_wifi_on() {
+    if $(networksetup -setairportpower "$interface" on) ; then
+        echo "Successed: Trun Wifi on"
+        exit 0
+    else
+        echo "Failed: Trun Wifi on"
+        exit 1
+    fi
+}
+
+turn_wifi_off() {
+    if $(networksetup -setairportpower "$interface" off); then
+        echo "Successed: Trun Wifi off"
+        exit 0
+    else
+        echo "Failed: Trun Wifi off"
+        exit 1
+    fi
+}
+
+list_wifi() {
+    eval "$airport_path scan" | tail -n +2 | awk '{ print $1 }' | sort -u
+    exit
+}
+
+info () {
+    eval "$airport_path -I"
+    exit 0
+}
+
+name () {
+    info | grep ' SSID' | sed 's/^[ ]*//g'
+    exit 0
+}
+
+_join () {
+    local ssid="$1"
+    local pass="$2"
+
+    if [[ -n "$1" && -n "$2" ]]; then
+        networksetup -setairportnetwork "$interface" "$ssid" "$pass"
+        name
+        exit 0
+    fi
+    exit 1
+}
+
+join () {
+    local ssid=$(list_wifi | peco)
+    if [ -n "$ssid" ]; then
+        pass=$(security find-generic-password -ga "$ssid" 2>&1 | grep 'password:' | awk '{print $2}' | awk ' match($0, /[^"]+/) { print substr($0, RSTART, RLENGTH) } ')
+        _join "$ssid" "$pass"
+    fi
+    exit 1
+}
+
+main() {
+    while [[ "$#" > 0 ]]; do
+        case "$1" in
+            "on"   ) turn_wifi_on ;;
+            "off"  ) turn_wifi_off ;;
+            "list" ) list_wifi ;;
+            "join" ) join ;;
+            "name" ) name ;;
+            "info" ) info ;;
+            "-h" | "--help" )
+                echo "$USAGE"
+                exit
+                ;;
+            * )
+                echo "Action Not Found."
+                echo "Use 'wifi --help' to check avaible atcions."
+                exit 1
+                ;;
+        esac
+        shift
+    done
+}
+
+main "$@"

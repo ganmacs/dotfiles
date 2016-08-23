@@ -6,7 +6,7 @@
 
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
+export LANG=en_US
 export EDITOR=/usr/local/bin/vim
 
 REPORTTIME=1                  # 自動的に消費時間の統計情報を表示する。
@@ -44,12 +44,26 @@ zstyle ':vcs_info:*' unstagedstr "*"
 zstyle ':vcs_info:git:*' formats '[%b] %c%u'
 zstyle ':vcs_info:git:*' actionformats '[%b|%a] %c%u'
 
-precmd () {
-    # kasumi "$?"
+function notify_precmd {
+    prev_command_status=$?
+
     psvar=()
     LANG=en_US.UTF-8 vcs_info
     [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+
+    if [[ "$TTYIDLE" -gt 8 ]]; then
+        notify_title=$([ "$prev_command_status" -eq 0 ] && echo "Command succeeded \U1F646" || echo "Command failed \U1F645")
+        osascript -e "display notification \"$prev_command\" with title \"$notify_title\""
+    fi
 }
+
+function store_command {
+    prev_command=$2
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec store_command
+add-zsh-hook precmd notify_precmd
 
 PROMPT="%{${fg[green]}%}%n%{${reset_color}%}@%F{blue}localhost%f:%1(v|%F{red}%1v%f|) $ "
 
@@ -140,7 +154,7 @@ alias mv="mv -i"
 alias be="bundle exec"
 alias bs="bundle exec spring"
 alias binit="bundle init; bundle install --path vendor/bundle"
-alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
+alias emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 alias ff='find . -name "*" | peco | xargs open'
 alias fe='find . -name "*" | peco | xargs open -a emacs'
 alias awk='gawk'
@@ -171,6 +185,8 @@ export PATH="$HOME/.cabal/bin:$PATH"
 
 # OPAM configuration
 . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export PATH="$HOME/src/github.com/ganmacs/dotfiles/bin:$PATH"
 
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -254,7 +270,6 @@ bindkey '^q' peco-ghq
 
 function peco-branches() {
     local selected_branch="$(git branch | peco --query "$LBUFFER" | sed -e "s/^\*[ ]*//g")"
-    echo $selected_branch
     if [ -n "$selected_branch" ]; then
         BUFFER="git checkout ${selected_branch}"
         zle accept-line
@@ -291,11 +306,12 @@ function peco-find-history() {
 }
 zle -N peco-find-history
 bindkey '^r' peco-find-history
+
 function run_tmux() {
     if [ -z "$TMUX" ]; then
         if tmux has-session >/dev/null 2>&1 ; then
-            RET=$(tmux list-session | peco | sed -e "s/:.*//g")
-            RET=$(echo ${RET} | sed -e "s/[\r\n]\+//g")
+            ret=$(tmux list-session | peco | sed -e "s/:.*//g")
+            ret=$(echo ${ret} | sed -e "s/[\r\n]\+//g")
             if [ ! -z "$RET" ]; then
                 tmux attach -t "$RET"
             fi
@@ -307,44 +323,9 @@ function reload() {
     source ~/.zshrc
 }
 
-notify() {
-    echo $1
-    osascript -e "display notification \"$1\""
-}
-
-ci_check() {
-    local branch_name="$1"
-
-    while [[ "$(hub ci-status $branch_name 2>/dev/null)" = "pending" ]]; do
-        echo -n '.'
-        sleep 10
-    done
-
-    local st=$(hub ci-status $branch_name 2>&1)
-    case $st in
-        "success" )
-            notify "$(echo "CI Succeeded \U1F646")"
-            ;;
-        "error" )
-            notify "$(echo "CI Failed \U1F645")"
-            ;;
-        * )
-            echo $st
-            exit 1
-            ;;
-    esac
-
-    local url=$(hub ci-status $branch_name -v | awk '{ print $2 }')
-    echo -n "open $url ? [Y/n] "
-    read answer
-
-    case $answer in
-        "Y" | "y" )
-            open "$url"
-            ;;
-        * )
-            ;;
-    esac
-}
-
 run_tmux
+
+# ln -s /usr/local/share/git-core/contrib/git-jump/git-jump $HOME/bin/git-jump
+# ln -s /usr/local/share/git-core/contrib/diff-highlight/diff-highlight $HOME/bin/diff-highlight
+# ln -s /usr/local/share/git-core/contrib/workdir/git-new-workdir $HOME/bin/git-new-workdir
+export PATH="/usr/local/bin:$PATH"

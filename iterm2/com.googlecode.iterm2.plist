@@ -88,7 +88,7 @@
 			<key>Text</key>
 			<string>0x15 0x33</string>
 		</dict>
-		<key>0x3b-0x40000</key>
+		<key>0x3b-0xc0000</key>
 		<dict>
 			<key>Action</key>
 			<integer>11</integer>
@@ -222,9 +222,9 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame Preferences</key>
-	<string>519 576 606 456 0 0 1920 1057 </string>
+	<string>586 601 606 456 0 0 1920 1057 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>650 517 620 392 0 0 1920 1080 </string>
+	<string>714 667 620 392 0 0 2048 1280 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
 	<string>0 0 2048 1280 0 0 2048 1257 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
@@ -929,24 +929,7 @@
 			<key>Transparency</key>
 			<real>0.16741864383220673</real>
 			<key>Triggers</key>
-			<array>
-				<dict>
-					<key>action</key>
-					<string>GrowlTrigger</string>
-					<key>parameter</key>
-					<string>long command done</string>
-					<key>regex</key>
-					<string>^.* cpu [0-9.:]+ total</string>
-				</dict>
-				<dict>
-					<key>action</key>
-					<string>GrowlTrigger</string>
-					<key>parameter</key>
-					<string>Rspec Failed</string>
-					<key>regex</key>
-					<string>[0-9]*[1-9] failures</string>
-				</dict>
-			</array>
+			<array/>
 			<key>Unlimited Scrollback</key>
 			<true/>
 			<key>Use Bold Font</key>
@@ -1772,7 +1755,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-05-26T06:02:03Z</date>
+	<date>2016-06-10T07:05:16Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>

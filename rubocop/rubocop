@@ -3,6 +3,7 @@ AllCops:
     - "vendor/**/*"
     - "db/schema.rb"
   DisplayCopNames: true
+  TargetRubyVersion: 2.3
 
 Style/AndOr:
   EnforcedStyle: conditionals

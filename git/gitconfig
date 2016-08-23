@@ -18,8 +18,11 @@
   d  = diff
   po = push origin
   cm = commit
-  st = status
   s  = status --short --branch
+  o  = browse
+  st = status
+  ss  = stash
+  pop  = stash pop
   br = branch
   re = rebase
   u  = remote update
@@ -30,6 +33,7 @@
   rc = commit -c ORIG_HEAD
   hist = log --graph --stat
   l = log --graph --all --format=format:'%C(bold red)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold blue)― %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+  lo = log --oneline
   ignore = !"f() { local s=$1; shift; while [ $# -gt 0 ]; do s="$s,$1"; shift; done; curl "http://gitignore.io/api/$s"; }; f"
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -47,3 +51,7 @@
 [cmsg]
   ignorePaths=ganmacs
   ignoreCommits=ganmacs
+[pager]
+	log = diff-highlight | less
+	show = diff-highlight | less
+	diff = diff-highlight | less
