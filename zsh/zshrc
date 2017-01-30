@@ -113,6 +113,7 @@ zstyle ':completion:*:manuals' separate-sections true
 
 # zsh-completions
 fpath=(/usr/local/share/zsh-completions $fpath)
+fpath+=~/.zfunc
 
 autoload -U compinit; compinit
 
@@ -198,8 +199,9 @@ export GOPATH=$HOME
 export PATH=$PATH:$GOPATH/bin
 
 # rust
-export PATH=$HOME/.cargo/bin:$PATH
-export RUST_SRC_PATH=$HOME/.rust/src
+source ~/.cargo/env
+# llvm
+export PATH=$PATH:/usr/local/opt/llvm/bin
 
 if type docker >/dev/null 2>&1; then
     eval "$(direnv hook zsh)"
