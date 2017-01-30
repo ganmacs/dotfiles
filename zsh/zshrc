@@ -178,6 +178,8 @@ alias -g prc='`ps aux | grep $1 | grep -v grep`'
 # source
 # ======================
 
+export PATH="/usr/local/bin:$PATH"
+
 source `brew --prefix rbenv`/completions/rbenv.zsh
 source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -213,7 +215,6 @@ fi
 
 if type rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
-    export PATH="$HOME/.rbenv/bin:$PATH"
 else
     echo "Please Install rbenv"
 fi
@@ -324,10 +325,3 @@ function run_tmux() {
 function reload() {
     source ~/.zshrc
 }
-
-run_tmux
-
-# ln -s /usr/local/share/git-core/contrib/git-jump/git-jump $HOME/bin/git-jump
-# ln -s /usr/local/share/git-core/contrib/diff-highlight/diff-highlight $HOME/bin/diff-highlight
-# ln -s /usr/local/share/git-core/contrib/workdir/git-new-workdir $HOME/bin/git-new-workdir
-export PATH="/usr/local/bin:$PATH"
