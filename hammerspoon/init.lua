@@ -51,6 +51,7 @@ remapKey({'ctrl'}, 'n', keyCode('down'))
 remapKey({'ctrl'}, 'p', keyCode('up'))
 
 remapKey({'ctrl'}, 's', keyCode('f', {'cmd'}))
+remapKey({'ctrl'}, 'm', keyCode('return'))
 remapKey({'ctrl'}, 'w', keyCode('x', {'cmd'}))
 remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
 remapKey({'ctrl'}, 'h', keyCode('delete'))
