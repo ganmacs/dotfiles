@@ -222,6 +222,7 @@ else
 fi
 
 export PATH="/usr/local/heroku/bin:$PATH"
+export EMACS="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # ===============
 # keybind
