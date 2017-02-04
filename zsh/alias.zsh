@@ -1,0 +1,18 @@
+# -*- sh -*-
+
+alias ls="ls -FG"
+alias la="ls -FGThgoa"
+alias l="ls -lFh"
+alias rm="rm -i"
+alias mv="mv -i"
+alias addx="chmod +x"
+alias grep="ggrep"
+alias tar="gtar"
+alias vi="vim"
+alias git="hub"
+alias g="hub"
+alias p="pbpaste"
+alias c="pbcopy"
+alias awk="gawk"
+alias sed="gsed"
+alias emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
