@@ -14,3 +14,5 @@ source ~/.zsh/keybinding.zsh
 source ~/.zsh/peco.zsh
 source ~/.zsh/lang.zsh
 source ~/.zsh/ruby.zsh
+
+[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
