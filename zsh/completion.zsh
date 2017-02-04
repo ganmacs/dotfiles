@@ -1,7 +1,7 @@
 # -*- sh -*-
 
 autoload -U compinit
-compinit
+compinit -u
 
 setopt complete_in_word
 setopt magic_equal_subst

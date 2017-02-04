@@ -3,7 +3,10 @@
 # rbenv
 if type rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
-    source $HOMEBREW_PREFIX/opt/rbenv/completions/rbenv.zsh
+    if [ -z "$RBENV_ROOT" ]; then
+        export RBENV_ROOT="$HOMEBREW_PREFIX/opt/rbenv"
+    fi
+    source $RBENV_ROOT/completions/rbenv.zsh
 else
     echo "A missing package: rbenv"
 fi
