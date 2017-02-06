@@ -8,7 +8,6 @@ REPORTTIME=1
 
 setopt no_beep                  # no beep
 setopt auto_list                # show all candidates
-setopt menu_complete
 setopt mark_dirs                # add / when it is directory
 setopt correct                  # correct typo
 setopt auto_remove_slash        # remove /
