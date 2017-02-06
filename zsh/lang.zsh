@@ -8,7 +8,7 @@ export PATH=$PATH:$GOPATH/bin
 source $HOME/.cargo/env
 
 # LLVM
-export PATH="$PATH:$HOMEBREW_PREFIX/llvm/bin"
+export PATH="$PATH:$HOMEBREW_PREFIX/opt/llvm/bin"
 
 # cabal
 export PATH="$PATH:$HOME/.cabal/bin"
