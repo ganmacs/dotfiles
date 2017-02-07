@@ -1,9 +1,10 @@
 # -*- sh -*-
 
+[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
+
 # brew
 export PATH="/opt/brew/bin:/usr/local/bin:$PATH"
 export HOMEBREW_PREFIX=`brew --prefix`
-source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 source ~/.zsh/base.zsh
 source ~/.zsh/prompt.zsh
@@ -15,4 +16,6 @@ source ~/.zsh/peco.zsh
 source ~/.zsh/lang.zsh
 source ~/.zsh/ruby.zsh
 
-[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
+if [ -f $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi

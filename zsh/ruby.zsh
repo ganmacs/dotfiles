@@ -6,7 +6,10 @@ if type rbenv >/dev/null 2>&1; then
     if [ -z "$RBENV_ROOT" ]; then
         export RBENV_ROOT="$HOMEBREW_PREFIX/opt/rbenv"
     fi
-    source $RBENV_ROOT/completions/rbenv.zsh
+
+    if [ -f $RBENV_ROOT/completions/rbenv.zsh ]; then
+        source $RBENV_ROOT/completions/rbenv.zsh
+    fi
 else
     echo "A missing package: rbenv"
 fi
