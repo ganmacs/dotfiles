@@ -1,6 +1,8 @@
 # -*- sh -*-
 
 bindkey -e                      # emacs like keybind
+bindkey '^[^B' vi-backward-blank-word
+bindkey '^[^F' vi-forward-blank-word
 bindkey '^[h' backward-kill-word
 bindkey '^h' backward-delete-char
 
