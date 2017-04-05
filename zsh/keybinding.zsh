@@ -40,8 +40,11 @@ function reload() {
 function ghe() {
 	  case $1 in
 		    get )
-			      # You must export $GHE_HOST in ~/.zshrc.local
-			      ghq get $GHE_HOST:$2
+            if [[ -z "$GHE_HOST" ]]; then
+			          ghq get $GHE_HOST:$2
+            else
+                echo "You must set a value to $GHE_HOST"
+            fi
 			      ;;
 		    * )
 			      ghq $@
