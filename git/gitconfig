@@ -1,6 +1,5 @@
 [user]
-  name = ganmacs
-  email = ganmacs@gmail.com
+	useConfigOnly = true
 [core]
   excludesfile = ~/.gitignore_global
   editor = vim

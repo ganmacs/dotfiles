@@ -51,3 +51,12 @@ function ghe() {
 			      ;;
 	  esac
 }
+
+function private() {
+    if $(git rev-parse --is-inside-work-tree 2> /dev/null); then
+        git config user.name "ganmacs"
+        echo "Set user.name as $(git config --get user.name)"
+        git config user.email "ganmacs@gmail.com"
+        echo "Set user.email as $(git config --get user.email)"
+    fi
+}
