@@ -14,6 +14,7 @@ setopt auto_remove_slash        # remove /
 setopt auto_pushd
 setopt pushd_ignore_dups
 setopt no_tify
+setopt ignoreeof                # Do not logout by Ctrl-D
 
 # Select word style
 autoload -Uz select-word-style
