@@ -41,9 +41,9 @@ function ghe() {
 	  case $1 in
 		    get )
             if [[ -z "$GHE_HOST" ]]; then
-			          ghq get $GHE_HOST:$2
-            else
                 echo "You must set a value to $GHE_HOST"
+            else
+			          ghq get $GHE_HOST:$2
             fi
 			      ;;
 		    * )
