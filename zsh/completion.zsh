@@ -1,5 +1,9 @@
 # -*- sh -*-
 
+# zsh-completions
+fpath=($HOMEBREW_PREFIX/share/zsh-completions $fpath)
+fpath=(~/.zsh/completions $fpath)
+
 autoload -U compinit
 compinit -u
 
@@ -22,7 +26,3 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' # case insensitive
 zstyle ':completion:sudo:*' environ PATH="$SUDO_PATH:$PATH"
 zstyle ':completion:*' list-separator '-->'
 zstyle ':completion:*:manuals' separate-sections true
-
-# zsh-completions
-fpath=(/usr/local/share/zsh-completions $fpath)
-fpath+=~/.zfunc

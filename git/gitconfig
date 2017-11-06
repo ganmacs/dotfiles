@@ -1,7 +1,7 @@
 [user]
 	useConfigOnly = true
 [core]
-  excludesfile = ~/.gitignore_global
+	excludesfile = /Users/yuta-iwama/.gitignore_global
   editor = vim
   pager = less
 [color]
@@ -46,3 +46,7 @@
 	diff = diff-highlight | less
 [include]
   path = ~/.gitconfig.local
+[hub]
+  maintainerModify = true
+[rebase]
+	autostash = true

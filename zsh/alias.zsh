@@ -17,6 +17,7 @@ alias awk="gawk"
 alias sed="gsed"
 alias emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 
-alias gl="git l"
+alias h="head"
+alias gl="git lo"
 alias gu="g remote update"
 alias gst="git status"

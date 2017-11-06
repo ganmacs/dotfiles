@@ -60,3 +60,18 @@ function private() {
         echo "Set user.email as $(git config --get user.email)"
     fi
 }
+
+function ro() {
+    if $(git rev-parse --is-inside-work-tree 2> /dev/null); then
+        dir=$(git rev-parse --show-toplevel)
+        cd "$dir"
+    else
+        echo "Not a git repository"
+    fi
+}
+
+function dup2() {
+    pwd | pbcopy;
+    tmux split-window -h
+    cd `pbpaste`
+}
