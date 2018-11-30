@@ -20,7 +20,6 @@
   s  = status --short --branch
   o  = browse
   st = status
-  ss  = stash
   pop  = stash pop
   br = branch
   re = rebase
@@ -37,9 +36,6 @@
   clean = git lfs clean %f
   smudge = git lfs smudge %f
   required = true
-[cmsg]
-  ignorePaths=ganmacs
-  ignoreCommits=ganmacs
 [pager]
 	log = diff-highlight | less
 	show = diff-highlight | less

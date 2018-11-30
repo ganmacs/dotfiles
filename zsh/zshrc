@@ -1,10 +1,10 @@
 # -*- sh -*-
 
-[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
-
 # brew
 export PATH="/opt/brew/bin:/usr/local/bin:$PATH"
 export HOMEBREW_PREFIX=`brew --prefix`
+
+[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
 
 source ~/.zsh/base.zsh
 source ~/.zsh/prompt.zsh
@@ -12,7 +12,7 @@ source ~/.zsh/alias.zsh
 source ~/.zsh/completion.zsh
 source ~/.zsh/history.zsh
 source ~/.zsh/keybinding.zsh
-source ~/.zsh/peco.zsh
+source ~/.zsh/fzf.zsh
 source ~/.zsh/lang.zsh
 source ~/.zsh/ruby.zsh
 
