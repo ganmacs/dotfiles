@@ -1,5 +1,6 @@
 [user]
-	useConfigOnly = true
+  name = Yuta Iwama
+  email = ganmacs@gmail.com
 [core]
 	excludesfile = /Users/yuta-iwama/.gitignore_global
   editor = vim
@@ -46,3 +47,7 @@
   maintainerModify = true
 [rebase]
 	autostash = true
+[merge "mergepbx"]
+	name = Xcode project files merger
+	driver = mergepbx %O %A %B
+	note = auto-generated configuration by cpad2 upgrade
