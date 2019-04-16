@@ -15,7 +15,6 @@ alias p="pbpaste"
 alias c="pbcopy"
 alias awk="gawk"
 alias sed="gsed"
-alias emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 
 alias h="head"
 alias gl="git lo"
