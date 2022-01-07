@@ -4,11 +4,13 @@ alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
 alias gibol='gibo -l | tr "\t" "\n" | sed "/^=/d" | sort | peco | xargs gibo'
 alias fzf-t="fzf-tmux -d 20 --exact --no-sort --bind 'ctrl-k:kill-line' --bind 'ctrl-v:page-down' --bind 'alt-v:page-up'"
 
+export FZFPATH=$HOME
+
 # show all repositories by ghq list
 function fzf-ghq() {
     local selected_dir=$(ghq list | fzf-t)
     if [ -n "$selected_dir" ]; then
-        BUFFER="cd ${GOPATH}/src/${selected_dir}"
+        BUFFER="cd ${FZFPATH}/src/${selected_dir}"
         zle accept-line
     fi
     zle redisplay
