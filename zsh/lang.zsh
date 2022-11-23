@@ -1,11 +1,17 @@
 # -*- sh -*-
 
-# Go
-export GOPATH=$HOME
-export PATH=$PATH:$GOPATH/bin
+# go lang
+eval "$(goenv init -)"
+export PATH="${GOPATH}/bin:$PATH"
+
+# java
+export JENV_ROOT="$HOME/.jenv"
+if [[ -d "${JENV_ROOT}" ]]; then
+  eval "$(jenv init -)"
+fi
 
 # Rust
-source $HOME/.cargo/env
+[[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
 # LLVM
 export PATH="$PATH:$HOMEBREW_PREFIX/opt/llvm/bin"

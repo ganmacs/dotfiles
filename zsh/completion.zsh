@@ -1,8 +1,7 @@
 # -*- sh -*-
 # zsh-completions
 
-fpath=(~/.zsh/completions $HOMEBREW_PREFIX/share/zsh-completions $fpath)
-
+fpath=(~/.zsh/completions "${HOMEBREW_PREFIX}/Homebrew/completions/zsh/_brew" $fpath)
 autoload -U compinit
 compinit -u
 

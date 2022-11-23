@@ -1,10 +1,10 @@
 # -*- sh -*-
 
 # brew
-export PATH="/opt/brew/bin:/usr/local/bin:$PATH"
+export PATH="/opt/brew/bin:/usr/local/bin:/usr/local/sbin:$PATH"
 export HOMEBREW_PREFIX=`brew --prefix`
 
-[ -f ~/.zshrc.local ]  && source ~/.zshrc.local
+[[ -f ~/.zshrc.local ]]  && source ~/.zshrc.local
 
 source ~/.zsh/base.zsh
 source ~/.zsh/prompt.zsh
@@ -16,6 +16,24 @@ source ~/.zsh/fzf.zsh
 source ~/.zsh/lang.zsh
 source ~/.zsh/ruby.zsh
 
-if [ -f $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+if [[ -f $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/opt/texinfo/bin:$PATH"
+
+[[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
+
+# terraform
+if command -v terraform &> /dev/null; then
+  autoload -U +X bashcompinit && bashcompinit
+  complete -o nospace -C /usr/local/bin/terraform terraform
+fi
+
+# k8s
+if command -v kubectl &> /dev/null; then
+  source <(kubectl completion zsh)
+  alias k=kubectl
+  complete -o default -F __start_kubectl k
 fi

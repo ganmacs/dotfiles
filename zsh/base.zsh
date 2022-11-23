@@ -24,5 +24,7 @@ zstyle ':zle:*' word-style unspecified
 
 # others
 export PATH="/usr/local/heroku/bin:$PATH" # Added by the Heroku Toolbelt
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export PATH="$HOME/.nodebrew/current/bin:$PATH"
 export PATH="$HOME/src/github.com/ganmacs/dotfiles/bin:$PATH"
 export EMACS="/Applications/Emacs.app/Contents/MacOS/Emacs"
